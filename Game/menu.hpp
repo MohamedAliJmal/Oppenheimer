@@ -7,13 +7,18 @@ class Menu {
 private:
 
     int pos;
-    bool pressed, theselect,start_game;
+    bool start_game,windowClose;
 
     sf::RenderWindow* window;
     sf::RectangleShape* winclose;
     sf::Font* font;
     sf::Texture* image;
     sf::Sprite* bg;
+
+
+    sf::RectangleShape* optionWinClose;
+    sf::Texture* optionImage;
+    sf::Sprite* optionBg;
 
     sf::Vector2i pos_mouse;
     sf::Vector2f mouse_coord;
@@ -34,4 +39,10 @@ public:
     void run_menu();
     bool getStartGame();
     sf::RenderWindow*  getWindow();
+    bool getWindowClose();
+
+    void option();
+    void about();
+    
+    
 };

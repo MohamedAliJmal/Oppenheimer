@@ -7,6 +7,10 @@ Menu::Menu() {
     image = new sf::Texture();
     bg = new sf::Sprite();
 
+    this->optionWinClose = nullptr;
+    this->optionBg = nullptr;
+    this->optionImage = nullptr;
+
     set_values();
 }
 
@@ -24,11 +28,18 @@ sf::RenderWindow* Menu::getWindow()
 }
 
 void Menu::set_values() {
+
+    /*
+    * initialise variables
+    * and text of menu options
+    */
+
     window->create(sf::VideoMode(1280, 720), "Game", sf::Style::Titlebar | sf::Style::Close);
     //window->setPosition(sf::Vector2i(0, 0));
 
-    pos = 0;
-    this->pressed = this->theselect=this->start_game = false;
+    this->pos = 0;
+    this->start_game=this->windowClose = false;
+
     font->loadFromFile("assets/font/arial.ttf");
     image->loadFromFile("assets/images/menu-sci-fi-game.png");
 
@@ -56,6 +67,7 @@ void Menu::set_values() {
     winclose->setPosition(1178, 39);
     winclose->setFillColor(sf::Color::Transparent);
 
+   
 }
 
 bool Menu::getStartGame()
@@ -64,67 +76,90 @@ bool Menu::getStartGame()
 }
 
 void Menu::loop_events() {
+
+    /*
+    * choose between start game , option , about or quit; 
+    */
+
     sf::Event event;
+    pos_mouse = sf::Mouse::getPosition(*window);
+    mouse_coord = window->mapPixelToCoords(pos_mouse);
     while (window->pollEvent(event)) {
-        if (event.type == sf::Event::Closed) {
+
+        if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+        {
             window->close();
+            this->windowClose = true;
+            
+
         }
 
-        pos_mouse = sf::Mouse::getPosition(*window);
-        mouse_coord = window->mapPixelToCoords(pos_mouse);
+        
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !pressed) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) ) {
             if (pos < 4) {
                 ++pos;
-                pressed = true;
                 texts[pos].setOutlineThickness(4);
                 texts[pos - 1].setOutlineThickness(0);
-                pressed = false;
-                theselect = false;
+               
             }
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !pressed) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) ) {
             if (pos > 1) {
                 --pos;
-                pressed = true;
+                
                 texts[pos].setOutlineThickness(4);
                 texts[pos + 1].setOutlineThickness(0);
-                pressed = false;
-                theselect = false;
+                
             }
 
             
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
         {
-            this->pressed = true;
             switch (pos)
             {
             case 1:
                 this->start_game = true;
-                
                 break;
 
+            case 2:
+
+                //this->option();
+                break;
+
+            case 3:
+
+                //this->about();
+                break;
+
+            case 4:
+                window->close();
+                this->windowClose = true;
+                this->start_game = true;
+                
+                break;
             }
+              
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && !theselect) {
-            theselect = true;
-            if (pos == 4) {
-                window->close();
-            }
-            std::cout << options[pos] << '\n';
-        }
+        
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             if (winclose->getGlobalBounds().contains(mouse_coord)) {
                 //std::cout << "Close the window!" << '\n';
                 window->close();
+                this->windowClose = true;
+                
+
+
             }
         }
     }
 }
+
+
 
 void Menu::draw_all() {
     window->clear();
@@ -136,8 +171,15 @@ void Menu::draw_all() {
 }
 
 void Menu::run_menu() {
-    while (window->isOpen() && !start_game) {
+
+
+    while (this->window->isOpen() && !this->start_game) {
         loop_events();
         draw_all();
     }
+}
+
+bool Menu::getWindowClose()
+{
+    return this->windowClose;
 }

@@ -18,7 +18,7 @@
 * - start up menu ::
 * - save records by name
 * - levels
-* -end game
+* -end game :: done
 */
 
 
@@ -43,6 +43,9 @@ private:
 
 	sf::Text text;
 
+	sf::Text gameOver;
+	sf::RectangleShape end;
+
 	//game logic
 
 	unsigned points;
@@ -51,6 +54,7 @@ private:
 	int maxEnemies;
 	bool mouseHeld;
 	int health;
+	bool pause;
 
 
 
@@ -86,4 +90,7 @@ public:
 	void renderText(sf::RenderTarget& target);
 	void render();
 	void renderEnemy();
+
+	int getPoints();
+	bool getPause();
 };

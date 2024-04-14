@@ -15,7 +15,10 @@ void Game::initializeVariables()
 	this->enemySpawnTimerMax = 1000.f;
 	this->maxEnemies = 10;
 	this->mouseHeld = false;
-	this->health = 10;
+	this->health =1;
+	this->end=sf::RectangleShape(sf::Vector2f(1280, 720));
+	this->pause = false;
+	
 	
 
 
@@ -23,7 +26,7 @@ void Game::initializeVariables()
 
 void Game::initializeFont()
 {
-	if (!font.loadFromFile("assets/font/arial.ttf"))
+	if (!font.loadFromFile("assets/font/game_over.ttf"))
 	{
 		std::cout << "font failed\n";
 	}
@@ -32,9 +35,19 @@ void Game::initializeFont()
 void Game::initializeText()
 {
 	this->text.setFont(this->font);
-	this->text.setCharacterSize(24);
+	this->gameOver.setFont(this->font);
+
+	this->gameOver.setCharacterSize(130);
+	this->text.setCharacterSize(75);
+
 	this->text.setFillColor(sf::Color::White);
+	this->gameOver.setFillColor(sf::Color::Red);
+
+	this->gameOver.setPosition(sf::Vector2f(460,138));
+
+
 	this->text.setString("null");
+	this->gameOver.setString("null");
 }
 		
 
@@ -59,6 +72,9 @@ void Game::initializeBg()
 {
 	this->bg  = new sf::Sprite();
 	this->bg->setTexture(*image);
+
+	//when game is over the screen get darker
+	end.setFillColor(sf::Color(0, 0, 0, 100));
 	
 }
 
@@ -84,16 +100,26 @@ Game::~Game()
 bool Game::running()
 
 {
-
 	//std::cout << this->window->isOpen() << '\n';
-	return this->window->isOpen();
+	
+	return this->window->isOpen() && !this->pause;
+}
+
+int Game::getPoints()
+{
+	return this->points;
 }
 
 void Game::updateText()
 {
 	std::stringstream ss;
-	ss << "Points: " << this->points <<"\nHealth " << this->health ;
+	ss << "Points: " << this->points <<"\nHealth: " << this->health ;
 	this->text.setString(ss.str());
+
+	std::stringstream sg;
+	sg << "Game Over\n" << "Your Score: " << this->points << "\n Best Score:"<<"\nClick To Restart";
+	this->gameOver.setString(sg.str());
+	
 }
 
 void Game::renderText(sf::RenderTarget& target)
@@ -121,8 +147,15 @@ void Game::pollEvents()
 				this->window->close();
 
 			}
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace))
+			{
+				this->pause = true;
+				std::cout << "backspace\n" << '\n';
+			}
 			break;
 		}
+
 
 
 
@@ -141,21 +174,27 @@ void Game::updateMousePos()
 	this->mousePosWindow = sf::Mouse::getPosition(*this->window);
 	this->mousePosView = this->window->mapPixelToCoords(this->mousePosWindow);
 
+
 }
 
 void Game::update()
 {
 	this->pollEvents();
 
+	this->updateMousePos();
+
 	if (this->health>0)
 	{
 
-		this->updateMousePos();
+		
 
 		this->updateEnemy();
 		
 		this->updateText();
 	}
+
+
+	
 	//to do zid endgame animation
 
 
@@ -165,15 +204,58 @@ void Game::update()
 
 void Game::render()
 {
+	
+	std::cout <<"mousePosWindow " << this->mousePosWindow.x <<" "<< this->mousePosWindow.y << '\n';
+	std::cout << "mousePosview " << this->mousePosView.x << " " << this->mousePosView.y << '\n';
+
+
 	this->window->clear();
 
 	this->window->draw(*bg);
+
+	
 
 	this->renderEnemy();
 
 	this->renderText(*this->window);
 
+	if (this->health == 0)
+	{
+		this->window->draw(this->end);	
+		this->window->draw(this->gameOver);
+		if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+		
+				this->health = 10;
+				this->points = 0;
+
+				while (!enemies.empty())
+				{
+					delete enemies[0];
+					enemies.erase(enemies.begin());
+				}
+
+				//for (int i = 0; i < this->enemies.size(); i++)
+				//{
+				//	
+				//		//delete enemies.at(i);
+				//		this->enemies.erase(this->enemies.begin() + i);
+				//	
+
+				//}
+
+			
+		}
+		
+		
+	}
+
 	this->window->display();
+}
+
+bool Game::getPause()
+{
+	return this->pause;
 }
 
 void  Game::spawnEnemy()
@@ -187,7 +269,7 @@ void  Game::spawnEnemy()
 	Enemy* enemy = new Enemy();
 	enemy->getEnemy().setPosition(
 		static_cast<float>(rand() % static_cast<int>(this->window->getSize().x - enemy->getEnemy().getSize().x)),
-		static_cast<float>(rand() % static_cast<int>(this->window->getSize().y - enemy->getEnemy().getSize().y))
+		static_cast<float>(rand() % static_cast<int>(this->window->getSize().y - enemy->getEnemy().getSize().y-100))
 
 		);
 	this->enemies.push_back(enemy);
@@ -210,7 +292,7 @@ void Game::renderEnemy()
 void Game::updateEnemy()
 {
 	/*
-	*  @return void
+	*  
 	* updates the enemy spawntimer and spawn enemy
 	* when the total amount of enemies is maller than the max
 	* moves the enemies downwardds
