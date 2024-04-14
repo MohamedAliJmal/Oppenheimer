@@ -8,13 +8,16 @@
 class Enemy
 {
 private:
-	sf::RectangleShape enemy;
-	int id;
+
+	sf::Sprite* spirite;
+	sf::Texture* texture;
+
+	
 public:
 	Enemy();
 	~Enemy();
-	sf::RectangleShape& getEnemy();
-	int getId();
+	sf::Sprite* getEnemy();
+	
 
 
 

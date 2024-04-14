@@ -20,6 +20,7 @@ void Game::initializeVariables()
 	this->pause = false;
 	
 	
+	
 
 
 }
@@ -66,6 +67,7 @@ void Game::initializeImage()
 	{
 		std::cout << "image failed\n";
 	}
+
 }
 
 void Game::initializeBg()
@@ -90,6 +92,7 @@ Game::Game(sf::RenderWindow* window)
 	this->initializeWindow(window);
 	this->initializeFont();
 	this->initializeText();
+	
 }
 
 Game::~Game()
@@ -187,10 +190,10 @@ void Game::update()
 	{
 
 		
-
+		this->updateText();
 		this->updateEnemy();
 		
-		this->updateText();
+		
 	}
 
 
@@ -267,11 +270,13 @@ void  Game::spawnEnemy()
 	* add enemy to the vector
 	*/
 	Enemy* enemy = new Enemy();
-	enemy->getEnemy().setPosition(
-		static_cast<float>(rand() % static_cast<int>(this->window->getSize().x - enemy->getEnemy().getSize().x)),
-		static_cast<float>(rand() % static_cast<int>(this->window->getSize().y - enemy->getEnemy().getSize().y-100))
+	std::cout << "scale= " << enemy->getEnemy()->getScale().x << enemy->getEnemy()->getScale().y << '\n';
+	enemy->getEnemy()->setPosition(
+		static_cast<float>(rand() % static_cast<int>(this->window->getSize().x - enemy->getEnemy()->getTexture()->getSize().x * enemy->getEnemy()->getScale().x)),
+		static_cast<float>(rand() % static_cast<int>(this->window->getSize().y - enemy->getEnemy()->getTexture()->getSize().y * enemy->getEnemy()->getScale().y - 500))
 
 		);
+	
 	this->enemies.push_back(enemy);
 
 
@@ -285,7 +290,7 @@ void Game::renderEnemy()
 {
 	for (auto& e : this->enemies)
 	{
-		this->window->draw(e->getEnemy());
+		this->window->draw(*e->getEnemy());
 	}
 }
 
@@ -316,11 +321,11 @@ void Game::updateEnemy()
 
 	for (int i = 0; i < enemies.size(); i++)
 	{
-		enemies.at(i)->getEnemy().move(0.f, 1.f);
+		enemies.at(i)->getEnemy()->move(0.f, 1.f);
 
 
 		//if enemy finish the line
-		if (enemies.at(i)->getEnemy().getPosition().y > this->window->getSize().y)
+		if (enemies.at(i)->getEnemy()->getPosition().y > this->window->getSize().y)
 		{
 			delete this->enemies.at(i);
 			this->enemies.erase(this->enemies.begin() + i);
@@ -342,7 +347,7 @@ void Game::updateEnemy()
 			this->mouseHeld = true;
 			for (int i = 0; i < this->enemies.size(); i++)
 			{
-				if (enemies.at(i)->getEnemy().getGlobalBounds().contains(this->mousePosView))
+				if (enemies.at(i)->getEnemy()->getGlobalBounds().contains(this->mousePosView))
 				{
 					delete enemies.at(i);
 					this->enemies.erase(this->enemies.begin() + i);

@@ -40,8 +40,9 @@ private:
 
 	//resource
 	sf::Font font;
-
 	sf::Text text;
+
+	
 
 	sf::Text gameOver;
 	sf::RectangleShape end;
@@ -93,4 +94,6 @@ public:
 
 	int getPoints();
 	bool getPause();
+
+	void setPosition(sf::Sprite sp);
 };

@@ -3,7 +3,7 @@
 
 Enemy::Enemy()
 {
-	int r = rand() % 5;
+	/*int r = rand() % 5;
 	this->enemy.setSize(sf::Vector2f(100.f, 100.f));
 	this->enemy.setOutlineThickness(1.f);
 
@@ -36,23 +36,28 @@ Enemy::Enemy()
 		break;
 
 	}
-	std::cout << "Enemy id= " << id << " is created\n";
+	std::cout << "Enemy id= " << id << " is created\n";*/
+
+	this->texture = new sf::Texture();
+	this->spirite = new sf::Sprite();
+	
+	this->texture->loadFromFile("assets/images/alien.png");
+	this->spirite->setTexture(*this->texture);
+	this->spirite->setScale(sf::Vector2f(0.5,0.5));
 
 }
 
 Enemy::~Enemy()
 {
-	std::cout << "Enemy id= " << id << " is destructed\n";
+	delete this->texture;
+	delete this->spirite;
 }
 
 
-sf::RectangleShape& Enemy::getEnemy()
+sf::Sprite* Enemy::getEnemy()
 {
-	return this->enemy;
+	return this->spirite;
 }
 
-int Enemy::getId()
-{
-	return id;
-}
+
 
