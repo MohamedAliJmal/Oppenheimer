@@ -198,11 +198,10 @@ void  Game::spawnEnemy()
 	* add enemy to the vector
 	*/
 	Enemy* enemy = new Enemy();
-	std::cout << "scale= " << enemy->getEnemy()->getScale().x << enemy->getEnemy()->getScale().y << '\n';
 	enemy->getEnemy()->setPosition(
 		static_cast<float>(rand() % static_cast<int>(this->window->getSize().x - enemy->getEnemy()->getTexture()->getSize().x * enemy->getEnemy()->getScale().x)),
 		//static_cast<float>(rand() % static_cast<int>(this->window->getSize().y - enemy->getEnemy()->getTexture()->getSize().y * enemy->getEnemy()->getScale().y - 1000))
-		0
+		-100
 
 		);
 	
@@ -228,16 +227,17 @@ void Game::updateEnemy()
 	/*
 	*  
 	* updates the enemy spawntimer and spawn enemy
-	* when the total amount of enemies is maller than the max
+	* when the total amount of enemies is smaller than the max
 	* moves the enemies downwardds
 	* removes the enemies at the edge of the screen
 	*/
 
-	if (this->enemies.size() < this->maxEnemies)
+	if (this->enemies.size()  < this->maxEnemies)
 	{
+		std::cout << enemies.size()<<'\n';
 		if (enemySpawnTimer >= enemySpawnTimerMax)
 		{
-			this->maxEnemies +=static_cast<int>(floor(sqrt(this->level)));
+			this->maxEnemies =5+static_cast<int>(floor(sqrt(this->level)));
 			enemySpawnTimer = 0.f;
 			this->spawnEnemy();
 		}
@@ -257,8 +257,9 @@ void Game::updateEnemy()
 		//if enemy finish the line
 		if (enemies.at(i)->getEnemy()->getPosition().y > this->window->getSize().y)
 		{
-			delete this->enemies.at(i);
+			//delete this->enemies.at(i);
 			this->enemies.erase(this->enemies.begin() + i);
+			//this->enemies.shrink_to_fit();
 			health--;
 		}
 
