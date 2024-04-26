@@ -1,6 +1,17 @@
 #include "game.hpp"
 #include "menu.hpp"
 
+
+/*
+* todo
+* - start up menu :: 1/2 done -> option and about
+* - save records by name
+* - levels::done
+* -end game :: done
+* save scores and display high score (use heap structure)
+* 
+*/
+
 int main()
 {
     srand(static_cast<unsigned>(time(NULL)));
@@ -8,7 +19,7 @@ int main()
     // Create the main window
 
     Menu menu;
-    while (!menu.getStartGame()) menu.run_menu();
+    while (!menu.getStartGame() && !menu.getWindowClose()) menu.run_menu();
 
     
 

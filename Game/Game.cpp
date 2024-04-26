@@ -11,13 +11,14 @@ void Game::initializeVariables()
 	//game logic
 
 	this->points = 0;
-	this->enemySpawnTimer = 999.f;
+	this->enemySpawnTimer = 999.9f;
 	this->enemySpawnTimerMax = 1000.f;
-	this->maxEnemies = 10;
+	this->maxEnemies = 5;
 	this->mouseHeld = false;
-	this->health =1;
+	this->health =3;
 	this->end=sf::RectangleShape(sf::Vector2f(1280, 720));
 	this->pause = false;
+	this->level = 1;
 	
 	
 	
@@ -39,12 +40,14 @@ void Game::initializeText()
 	this->gameOver.setFont(this->font);
 
 	this->gameOver.setCharacterSize(130);
-	this->text.setCharacterSize(75);
+	this->text.setCharacterSize(60);
+	
 
 	this->text.setFillColor(sf::Color::White);
 	this->gameOver.setFillColor(sf::Color::Red);
 
 	this->gameOver.setPosition(sf::Vector2f(460,138));
+	
 
 
 	this->text.setString("null");
@@ -115,8 +118,11 @@ int Game::getPoints()
 
 void Game::updateText()
 {
+
+
+
 	std::stringstream ss;
-	ss << "Points: " << this->points <<"\nHealth: " << this->health ;
+	ss << " Level: " << this->level << "\n Points: " << this->points  << "\n Health: " << this->health;
 	this->text.setString(ss.str());
 
 	std::stringstream sg;
@@ -130,43 +136,7 @@ void Game::renderText(sf::RenderTarget& target)
 	target.draw(this->text);
 }
 
-void Game::pollEvents()
-{
 
-	
-	while (this->window->pollEvent(this->event))
-	{
-		switch (this->event.type)
-		{
-		case sf::Event::Closed:
-			this->window->close();
-			break;
-
-
-		case sf::Event::KeyPressed:
-			
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-			{
-				this->window->close();
-
-			}
-
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace))
-			{
-				this->pause = true;
-				std::cout << "backspace\n" << '\n';
-			}
-			break;
-		}
-
-
-
-
-
-
-	}
-	
-}
 
 void Game::updateMousePos()
 {
@@ -205,60 +175,18 @@ void Game::update()
 
 }
 
-void Game::render()
-{
-	
-	std::cout <<"mousePosWindow " << this->mousePosWindow.x <<" "<< this->mousePosWindow.y << '\n';
-	std::cout << "mousePosview " << this->mousePosView.x << " " << this->mousePosView.y << '\n';
 
-
-	this->window->clear();
-
-	this->window->draw(*bg);
-
-	
-
-	this->renderEnemy();
-
-	this->renderText(*this->window);
-
-	if (this->health == 0)
-	{
-		this->window->draw(this->end);	
-		this->window->draw(this->gameOver);
-		if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
-		{
-		
-				this->health = 10;
-				this->points = 0;
-
-				while (!enemies.empty())
-				{
-					delete enemies[0];
-					enemies.erase(enemies.begin());
-				}
-
-				//for (int i = 0; i < this->enemies.size(); i++)
-				//{
-				//	
-				//		//delete enemies.at(i);
-				//		this->enemies.erase(this->enemies.begin() + i);
-				//	
-
-				//}
-
-			
-		}
-		
-		
-	}
-
-	this->window->display();
-}
 
 bool Game::getPause()
 {
 	return this->pause;
+}
+
+void Game::calculateLevel()
+{
+	//this->level = ceil(static_cast<double>(this->points - 10) / ((2000 - 10) / 30));
+	//this->level = floor(static_cast < double>(30 * (1 - exp(-0.0007 * this->points))));
+	this->level = floor(0.3 * sqrt(this->points))+1;
 }
 
 void  Game::spawnEnemy()
@@ -273,7 +201,8 @@ void  Game::spawnEnemy()
 	std::cout << "scale= " << enemy->getEnemy()->getScale().x << enemy->getEnemy()->getScale().y << '\n';
 	enemy->getEnemy()->setPosition(
 		static_cast<float>(rand() % static_cast<int>(this->window->getSize().x - enemy->getEnemy()->getTexture()->getSize().x * enemy->getEnemy()->getScale().x)),
-		static_cast<float>(rand() % static_cast<int>(this->window->getSize().y - enemy->getEnemy()->getTexture()->getSize().y * enemy->getEnemy()->getScale().y - 500))
+		//static_cast<float>(rand() % static_cast<int>(this->window->getSize().y - enemy->getEnemy()->getTexture()->getSize().y * enemy->getEnemy()->getScale().y - 1000))
+		0
 
 		);
 	
@@ -308,10 +237,11 @@ void Game::updateEnemy()
 	{
 		if (enemySpawnTimer >= enemySpawnTimerMax)
 		{
+			this->maxEnemies +=static_cast<int>(floor(sqrt(this->level)));
 			enemySpawnTimer = 0.f;
 			this->spawnEnemy();
 		}
-		else enemySpawnTimer += 10.f;
+		else enemySpawnTimer +=static_cast<float>(sqrt(this->level))*15.f;
 	}
 
 	/*for (auto& e : this->enemies)
@@ -321,7 +251,7 @@ void Game::updateEnemy()
 
 	for (int i = 0; i < enemies.size(); i++)
 	{
-		enemies.at(i)->getEnemy()->move(0.f, 1.f);
+		enemies.at(i)->getEnemy()->move(0.f, static_cast<float>(sqrt(this->level)));
 
 
 		//if enemy finish the line
@@ -352,7 +282,7 @@ void Game::updateEnemy()
 					delete enemies.at(i);
 					this->enemies.erase(this->enemies.begin() + i);
 					this->points += 10;
-
+					calculateLevel();
 				}
 
 			}
@@ -364,4 +294,99 @@ void Game::updateEnemy()
 	{
 		this->mouseHeld = false;
 	}
+}
+
+
+void Game::render()
+{
+
+	std::cout << "mousePosWindow " << this->mousePosWindow.x << " " << this->mousePosWindow.y << '\n';
+	std::cout << "mousePosview " << this->mousePosView.x << " " << this->mousePosView.y << '\n';
+
+
+	this->window->clear();
+
+	this->window->draw(*bg);
+
+
+
+	this->renderEnemy();
+	this->renderText(*this->window);
+
+	
+
+	if (this->health == 0)
+	{
+		this->window->draw(this->end);
+		this->window->draw(this->gameOver);
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+
+			this->health = 3;
+			this->points = 0;
+			this->level = 1;
+			this->maxEnemies = 5;
+
+			while (!enemies.empty())
+			{
+				//delete enemies[0];
+				enemies.erase(enemies.begin());
+			}
+
+			//for (int i = 0; i < this->enemies.size(); i++)
+			//{
+			//	
+			//		//delete enemies.at(i);
+			//		this->enemies.erase(this->enemies.begin() + i);
+			//	
+
+			//}
+
+
+		}
+
+
+	}
+
+
+
+	this->window->display();
+}
+
+void Game::pollEvents()
+{
+
+
+	while (this->window->pollEvent(this->event))
+	{
+		switch (this->event.type)
+		{
+		case sf::Event::Closed:
+			this->window->close();
+			break;
+
+
+		case sf::Event::KeyPressed:
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+			{
+				this->window->close();
+
+			}
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace))
+			{
+				this->pause = true;
+				std::cout << "backspace\n" << '\n';
+			}
+			break;
+		}
+
+
+
+
+
+
+	}
+
 }

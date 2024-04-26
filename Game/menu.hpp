@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+
 #include <iostream>
 
 class Menu {
@@ -11,6 +12,10 @@ private:
 
     sf::RenderWindow* window;
     sf::RectangleShape* winclose;
+    sf::RectangleShape* play;
+    sf::RectangleShape* option;
+    sf::RectangleShape* quit;
+    sf::RectangleShape* about;
     sf::Font* font;
     sf::Texture* image;
     sf::Sprite* bg;
@@ -23,7 +28,7 @@ private:
     sf::Vector2i pos_mouse;
     sf::Vector2f mouse_coord;
 
-    std::vector<const char*> options;
+    std::vector<const char *> options;
     std::vector<sf::Vector2f> coords;
     std::vector<sf::Text> texts;
     std::vector<std::size_t> sizes;
@@ -41,8 +46,8 @@ public:
     sf::RenderWindow*  getWindow();
     bool getWindowClose();
 
-    void option();
-    void about();
+    void Option();
+    void About();
     
     
 };

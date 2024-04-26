@@ -41,9 +41,9 @@ Enemy::Enemy()
 	this->texture = new sf::Texture();
 	this->spirite = new sf::Sprite();
 	
-	this->texture->loadFromFile("assets/images/alien.png");
+	this->texture->loadFromFile("assets/images/nuke2.png");
 	this->spirite->setTexture(*this->texture);
-	this->spirite->setScale(sf::Vector2f(0.5,0.5));
+	this->spirite->setScale(sf::Vector2f(0.25,0.25));
 
 }
 

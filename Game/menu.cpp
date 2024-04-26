@@ -3,6 +3,12 @@
 Menu::Menu() {
     window = new sf::RenderWindow();
     winclose = new sf::RectangleShape();
+    play = new sf::RectangleShape();
+    quit = new sf::RectangleShape();
+    option = new sf::RectangleShape();
+    about = new sf::RectangleShape();
+
+ 
     font = new sf::Font();
     image = new sf::Texture();
     bg = new sf::Sprite();
@@ -34,7 +40,7 @@ void Menu::set_values() {
     * and text of menu options
     */
 
-    window->create(sf::VideoMode(1280, 720), "Game", sf::Style::Titlebar | sf::Style::Close);
+    window->create(sf::VideoMode(1280, 720), "Oppenheimer", sf::Style::Titlebar | sf::Style::Fullscreen );
     //window->setPosition(sf::Vector2i(0, 0));
 
     this->pos = 0;
@@ -48,7 +54,7 @@ void Menu::set_values() {
     pos_mouse = { 0,0 };
     mouse_coord = { 0, 0 };
 
-    options = { "Game", "Play", "Options", "About", "Quit" };
+    options = { "Oppenheimer", "Play", "Options", "About", "Quit" };
     texts.resize(5);
     coords = { {590,40},{610,191},{590,282},{600,370},{623,457} };
     sizes = { 20,28,24,24,24 };
@@ -67,6 +73,27 @@ void Menu::set_values() {
     winclose->setPosition(1178, 39);
     winclose->setFillColor(sf::Color::Transparent);
 
+    play->setSize(sf::Vector2f(170, 60));
+    play->setPosition(578, 182);
+    
+    option->setSize(sf::Vector2f(170, 60));
+    option->setPosition( 590,271);
+    
+    about->setSize(sf::Vector2f(170, 60));
+    about->setPosition(580, 361);
+    
+    quit->setSize(sf::Vector2f(170,60));
+    quit->setPosition(580, 440);
+   
+
+
+
+
+
+
+
+    
+
    
 }
 
@@ -83,7 +110,9 @@ void Menu::loop_events() {
 
     sf::Event event;
     pos_mouse = sf::Mouse::getPosition(*window);
+    std::cout << pos_mouse.x << " " << pos_mouse.y<<"\n";
     mouse_coord = window->mapPixelToCoords(pos_mouse);
+
     while (window->pollEvent(event)) {
 
         if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
@@ -147,7 +176,7 @@ void Menu::loop_events() {
         
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            if (winclose->getGlobalBounds().contains(mouse_coord)) {
+            if (winclose->getGlobalBounds().contains(mouse_coord) || quit->getGlobalBounds().contains(mouse_coord)) {
                 //std::cout << "Close the window!" << '\n';
                 window->close();
                 this->windowClose = true;
@@ -155,6 +184,13 @@ void Menu::loop_events() {
 
 
             }
+            if (play->getGlobalBounds().contains(mouse_coord))
+            {
+                this->start_game = true;
+            }
+
+            if(option->getGlobalBounds().contains(mouse_coord)){}
+            if(about->getGlobalBounds().contains(mouse_coord)){}
         }
     }
 }
@@ -167,6 +203,7 @@ void Menu::draw_all() {
     for (auto t : texts) {
         window->draw(t);
     }
+    //window->draw(*quit);
     window->display();
 }
 

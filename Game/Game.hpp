@@ -6,20 +6,14 @@
 #include <SFML/Window.hpp>
 #include <iostream>
 #include <ctime>
+
 #include <sstream>
 #include "Enemy.h"
 
 
 
 
-/*
-* todo 
-* - multi color enemy ::done
-* - start up menu ::
-* - save records by name
-* - levels
-* -end game :: done
-*/
+
 
 
 
@@ -28,6 +22,7 @@
 class Game
 {
 private:
+
 	sf::RenderWindow* window;
 	sf::Event event;
 
@@ -56,6 +51,7 @@ private:
 	bool mouseHeld;
 	int health;
 	bool pause;
+	double level;
 
 
 
@@ -95,5 +91,6 @@ public:
 	int getPoints();
 	bool getPause();
 
+	void calculateLevel();
 	void setPosition(sf::Sprite sp);
 };
