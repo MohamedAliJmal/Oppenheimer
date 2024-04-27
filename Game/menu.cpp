@@ -40,7 +40,7 @@ void Menu::set_values() {
     * and text of menu options
     */
 
-    window->create(sf::VideoMode(1280, 720), "Oppenheimer", sf::Style::Titlebar  );
+    window->create(sf::VideoMode(1280, 720), "Oppenheimer", sf::Style::Titlebar | sf::Style::Fullscreen );
     //window->setPosition(sf::Vector2i(0, 0));
 
     this->pos = 0;

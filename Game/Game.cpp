@@ -13,12 +13,12 @@ void Game::initializeVariables()
 	this->points = 0;
 	this->enemySpawnTimer = 999.9f;
 	this->enemySpawnTimerMax = 1000.f;
-	this->maxEnemies = 5;
+	this->maxEnemies = 4;
 	this->mouseHeld = false;
 	this->health =3;
 	this->end=sf::RectangleShape(sf::Vector2f(1280, 720));
 	this->pause = false;
-	this->level = 1;
+	this->level = 0;
 	
 	
 	
@@ -42,6 +42,11 @@ void Game::initializeText()
 	this->gameOver.setCharacterSize(130);
 	this->text.setCharacterSize(60);
 	
+	this->text.setOutlineColor(sf::Color::Black);
+	this->text.setOutlineThickness(1.f);
+
+	this->gameOver.setOutlineColor(sf::Color::Black);
+	this->gameOver.setOutlineThickness(1.f);
 
 	this->text.setFillColor(sf::Color::White);
 	this->gameOver.setFillColor(sf::Color::Red);
@@ -168,7 +173,7 @@ void Game::update()
 
 
 	
-	//to do zid endgame animation
+	
 
 
 
@@ -186,7 +191,7 @@ void Game::calculateLevel()
 {
 	//this->level = ceil(static_cast<double>(this->points - 10) / ((2000 - 10) / 30));
 	//this->level = floor(static_cast < double>(30 * (1 - exp(-0.0007 * this->points))));
-	this->level = floor(0.3 * sqrt(this->points))+1;
+	this->level = floor(0.3 * sqrt(this->points));
 }
 
 void  Game::spawnEnemy()
@@ -234,14 +239,14 @@ void Game::updateEnemy()
 
 	if (this->enemies.size()  < this->maxEnemies)
 	{
-		std::cout << enemies.size()<<'\n';
+		//std::cout << enemies.size()<<'\n';
 		if (enemySpawnTimer >= enemySpawnTimerMax)
 		{
-			this->maxEnemies =5+static_cast<int>(floor(sqrt(this->level)));
+			this->maxEnemies =4+static_cast<int>(floor(sqrt(this->level)));
 			enemySpawnTimer = 0.f;
 			this->spawnEnemy();
 		}
-		else enemySpawnTimer +=static_cast<float>(sqrt(this->level))*15.f;
+		else enemySpawnTimer +=static_cast<float>(sqrt(this->level+1))*15.f;
 	}
 
 	/*for (auto& e : this->enemies)
@@ -251,7 +256,7 @@ void Game::updateEnemy()
 
 	for (int i = 0; i < enemies.size(); i++)
 	{
-		enemies.at(i)->getEnemy()->move(0.f, static_cast<float>(sqrt(this->level)));
+		enemies.at(i)->getEnemy()->move(0.f, static_cast<float>(sqrt(this->level+1)));
 
 
 		//if enemy finish the line
@@ -259,7 +264,7 @@ void Game::updateEnemy()
 		{
 			//delete this->enemies.at(i);
 			this->enemies.erase(this->enemies.begin() + i);
-			//this->enemies.shrink_to_fit();
+			
 			health--;
 		}
 
@@ -301,8 +306,8 @@ void Game::updateEnemy()
 void Game::render()
 {
 
-	std::cout << "mousePosWindow " << this->mousePosWindow.x << " " << this->mousePosWindow.y << '\n';
-	std::cout << "mousePosview " << this->mousePosView.x << " " << this->mousePosView.y << '\n';
+	/*std::cout << "mousePosWindow " << this->mousePosWindow.x << " " << this->mousePosWindow.y << '\n';
+	std::cout << "mousePosview " << this->mousePosView.x << " " << this->mousePosView.y << '\n';*/
 
 
 	this->window->clear();
@@ -325,8 +330,8 @@ void Game::render()
 
 			this->health = 3;
 			this->points = 0;
-			this->level = 1;
-			this->maxEnemies = 5;
+			this->level = 0;
+			this->maxEnemies = 4;
 
 			while (!enemies.empty())
 			{
