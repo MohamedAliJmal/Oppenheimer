@@ -15,13 +15,14 @@ void Game::initializeVariables()
 	this->enemySpawnTimerMax = 1000.f;
 	this->maxEnemies = 4;
 	this->mouseHeld = false;
-	this->health =3;
-	this->end=sf::RectangleShape(sf::Vector2f(1280, 720));
+	this->health = 3;
+	this->end = sf::RectangleShape(sf::Vector2f(1280, 720));
 	this->pause = false;
 	this->level = 0;
-	
-	
-	
+	this->danger = true;
+
+
+
 
 
 }
@@ -41,7 +42,7 @@ void Game::initializeText()
 
 	this->gameOver.setCharacterSize(130);
 	this->text.setCharacterSize(60);
-	
+
 	this->text.setOutlineColor(sf::Color::Black);
 	this->text.setOutlineThickness(1.f);
 
@@ -51,21 +52,21 @@ void Game::initializeText()
 	this->text.setFillColor(sf::Color::White);
 	this->gameOver.setFillColor(sf::Color::Red);
 
-	this->gameOver.setPosition(sf::Vector2f(460,138));
-	
+	this->gameOver.setPosition(sf::Vector2f(460, 138));
+
 
 
 	this->text.setString("null");
 	this->gameOver.setString("null");
 }
-		
+
 
 void Game::initializeWindow(sf::RenderWindow* window)
 {
-	
-	this->window =window;
+
+	this->window = window;
 	window->setFramerateLimit(60);
-	
+
 }
 
 void Game::initializeImage()
@@ -80,12 +81,32 @@ void Game::initializeImage()
 
 void Game::initializeBg()
 {
-	this->bg  = new sf::Sprite();
+	this->bg = new sf::Sprite();
 	this->bg->setTexture(*image);
 
 	//when game is over the screen get darker
 	end.setFillColor(sf::Color(0, 0, 0, 100));
+
+}
+
+void Game::initializeSound()
+{
 	
+	this->raid_buffer.loadFromFile("assets/music/main.ogg");
+
+	this->raid.setBuffer(raid_buffer);
+	this->raid.setLoop(true);
+	this->raid.play();
+
+
+
+	this->exp_buffer.loadFromFile("assets/music/explosion1.wav");
+
+	this->exp.setBuffer(exp_buffer);
+
+	this->go_buffer.loadFromFile("assets/music/gameover.wav");
+	this->go.setBuffer(go_buffer);
+
 }
 
 
@@ -100,19 +121,22 @@ Game::Game(sf::RenderWindow* window)
 	this->initializeWindow(window);
 	this->initializeFont();
 	this->initializeText();
+	this->initializeSound();
 	
+
 }
 
 Game::~Game()
 {
 	delete window;
+	
 }
 
 bool Game::running()
 
 {
 	//std::cout << this->window->isOpen() << '\n';
-	
+
 	return this->window->isOpen() && !this->pause;
 }
 
@@ -127,13 +151,13 @@ void Game::updateText()
 
 
 	std::stringstream ss;
-	ss << " Level: " << this->level << "\n Points: " << this->points  << "\n Health: " << this->health;
+	ss << " Level: " << this->level << "\n Points: " << this->points << "\n Health: " << this->health;
 	this->text.setString(ss.str());
 
 	std::stringstream sg;
-	sg << "Game Over\n" << "Your Score: " << this->points << "\n Best Score:"<<"\nClick To Restart";
+	sg << "Game Over\n" << "Your Score: " << this->points << "\n Best Score:" << "\nClick To Restart";
 	this->gameOver.setString(sg.str());
-	
+
 }
 
 void Game::renderText(sf::RenderTarget& target)
@@ -156,24 +180,29 @@ void Game::updateMousePos()
 }
 
 void Game::update()
+
 {
+	
+	
+	
+	
 	this->pollEvents();
 
 	this->updateMousePos();
 
-	if (this->health>0)
+	if (this->health > 0)
 	{
 
-		
+
 		this->updateText();
 		this->updateEnemy();
-		
-		
+
+
 	}
 
 
-	
-	
+
+
 
 
 
@@ -206,10 +235,10 @@ void  Game::spawnEnemy()
 	enemy->getEnemy()->setPosition(
 		static_cast<float>(rand() % static_cast<int>(this->window->getSize().x - enemy->getEnemy()->getTexture()->getSize().x * enemy->getEnemy()->getScale().x)),
 		//static_cast<float>(rand() % static_cast<int>(this->window->getSize().y - enemy->getEnemy()->getTexture()->getSize().y * enemy->getEnemy()->getScale().y - 1000))
-		-100
+		-300
 
-		);
-	
+	);
+
 	this->enemies.push_back(enemy);
 
 
@@ -230,23 +259,23 @@ void Game::renderEnemy()
 void Game::updateEnemy()
 {
 	/*
-	*  
+	*
 	* updates the enemy spawntimer and spawn enemy
 	* when the total amount of enemies is smaller than the max
 	* moves the enemies downwardds
 	* removes the enemies at the edge of the screen
 	*/
 
-	if (this->enemies.size()  < this->maxEnemies)
+	if (this->enemies.size() < this->maxEnemies)
 	{
 		//std::cout << enemies.size()<<'\n';
 		if (enemySpawnTimer >= enemySpawnTimerMax)
 		{
-			this->maxEnemies =4+static_cast<int>(floor(sqrt(this->level)));
+			this->maxEnemies = 4 + static_cast<int>(floor(sqrt(this->level)));
 			enemySpawnTimer = 0.f;
 			this->spawnEnemy();
 		}
-		else enemySpawnTimer +=static_cast<float>(sqrt(this->level+1))*15.f;
+		else enemySpawnTimer += static_cast<float>(sqrt(this->level + 1)) * 15.f;
 	}
 
 	/*for (auto& e : this->enemies)
@@ -256,7 +285,7 @@ void Game::updateEnemy()
 
 	for (int i = 0; i < enemies.size(); i++)
 	{
-		enemies.at(i)->getEnemy()->move(0.f, static_cast<float>(sqrt(this->level+1)));
+		enemies.at(i)->getEnemy()->move(0.f, static_cast<float>(sqrt(this->level + 1)));
 
 
 		//if enemy finish the line
@@ -264,8 +293,9 @@ void Game::updateEnemy()
 		{
 			//delete this->enemies.at(i);
 			this->enemies.erase(this->enemies.begin() + i);
-			
+
 			health--;
+			this->go.play();
 		}
 
 
@@ -278,22 +308,27 @@ void Game::updateEnemy()
 
 
 		//mouse held to avoid cheating
-		if(this->mouseHeld==false)
+		if (this->mouseHeld == false)
 		{
 			this->mouseHeld = true;
 			for (int i = 0; i < this->enemies.size(); i++)
 			{
 				if (enemies.at(i)->getEnemy()->getGlobalBounds().contains(this->mousePosView))
 				{
+					this->exp.play();
+					
+
+					
 					delete enemies.at(i);
 					this->enemies.erase(this->enemies.begin() + i);
 					this->points += 10;
+					
 					calculateLevel();
 				}
 
 			}
 		}
-		
+
 
 	}
 	else
@@ -319,15 +354,17 @@ void Game::render()
 	this->renderEnemy();
 	this->renderText(*this->window);
 
-	
+
 
 	if (this->health == 0)
 	{
+		
+		this->raid.stop();
 		this->window->draw(this->end);
 		this->window->draw(this->gameOver);
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-
+			this->raid.play();
 			this->health = 3;
 			this->points = 0;
 			this->level = 0;

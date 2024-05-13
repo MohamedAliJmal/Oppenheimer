@@ -12,12 +12,12 @@ private:
 	sf::Sprite* spirite;
 	sf::Texture* texture;
 
-	
+
 public:
 	Enemy();
 	~Enemy();
 	sf::Sprite* getEnemy();
-	
+
 
 
 

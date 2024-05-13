@@ -37,7 +37,17 @@ private:
 	sf::Font font;
 	sf::Text text;
 
-	
+	sf::SoundBuffer raid_buffer;
+	sf::Sound raid;
+
+	sf::SoundBuffer exp_buffer;
+	sf::Sound exp;
+
+	sf::SoundBuffer go_buffer;
+	sf::Sound go;
+
+
+
 
 	sf::Text gameOver;
 	sf::RectangleShape end;
@@ -52,6 +62,7 @@ private:
 	int health;
 	bool pause;
 	double level;
+	bool danger;
 
 
 
@@ -59,15 +70,16 @@ private:
 	std::vector<Enemy*> enemies;
 
 
-	
+
 	void initializeWindow(sf::RenderWindow* window);
 	void initializeVariables();
-	
-	
+
+
 	void initializeFont();
 	void initializeText();
 	void initializeImage();
 	void initializeBg();
+	void initializeSound();
 
 
 public:
@@ -83,7 +95,7 @@ public:
 	void update();
 	void updateEnemy();
 	void updateText();
-	
+
 	void renderText(sf::RenderTarget& target);
 	void render();
 	void renderEnemy();

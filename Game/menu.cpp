@@ -1,17 +1,19 @@
 #include "menu.hpp"
 
 Menu::Menu() {
-    window = new sf::RenderWindow();
-    winclose = new sf::RectangleShape();
-    play = new sf::RectangleShape();
-    quit = new sf::RectangleShape();
-    option = new sf::RectangleShape();
-    about = new sf::RectangleShape();
+    this->window = new sf::RenderWindow();
+    this->winclose = new sf::RectangleShape();
+    this->play = new sf::RectangleShape();
+    this->quit = new sf::RectangleShape();
+    this->option = new sf::RectangleShape();
+    this->about = new sf::RectangleShape();
 
- 
-    font = new sf::Font();
-    image = new sf::Texture();
-    bg = new sf::Sprite();
+    this->buffer = new sf::SoundBuffer();
+    this->sound = new sf::Sound();
+
+    this->font = new sf::Font();
+    this->image = new sf::Texture();
+    this->bg = new sf::Sprite();
 
     this->optionWinClose = nullptr;
     this->optionBg = nullptr;
@@ -26,6 +28,8 @@ Menu::~Menu() {
     delete font;
     delete image;
     delete bg;
+    delete sound;
+    delete buffer;
 }
 
 sf::RenderWindow* Menu::getWindow()
@@ -40,11 +44,13 @@ void Menu::set_values() {
     * and text of menu options
     */
 
-    window->create(sf::VideoMode(1280, 720), "Oppenheimer", sf::Style::Titlebar | sf::Style::Fullscreen );
+
+
+    window->create(sf::VideoMode(1280, 720), "Oppenheimer", sf::Style::Titlebar | sf::Style::Fullscreen);
     //window->setPosition(sf::Vector2i(0, 0));
 
     this->pos = 0;
-    this->start_game=this->windowClose = false;
+    this->start_game = this->windowClose = false;
 
     font->loadFromFile("assets/font/arial.ttf");
     image->loadFromFile("assets/images/menu-sci-fi-game.png");
@@ -75,16 +81,19 @@ void Menu::set_values() {
 
     play->setSize(sf::Vector2f(170, 60));
     play->setPosition(578, 182);
-    
+
     option->setSize(sf::Vector2f(170, 60));
-    option->setPosition( 590,271);
-    
+    option->setPosition(590, 271);
+
     about->setSize(sf::Vector2f(170, 60));
     about->setPosition(580, 361);
-    
-    quit->setSize(sf::Vector2f(170,60));
+
+    quit->setSize(sf::Vector2f(170, 60));
     quit->setPosition(580, 440);
-   
+
+    buffer->loadFromFile("assets/music/bloop.ogg");
+
+    sound->setBuffer(*buffer);
 
 
 
@@ -92,9 +101,11 @@ void Menu::set_values() {
 
 
 
-    
 
-   
+
+
+
+
 }
 
 bool Menu::getStartGame()
@@ -105,48 +116,54 @@ bool Menu::getStartGame()
 void Menu::loop_events() {
 
     /*
-    * choose between start game , option , about or quit; 
+    * choose between start game , option , about or quit;
     */
 
     sf::Event event;
     pos_mouse = sf::Mouse::getPosition(*window);
-    std::cout << pos_mouse.x << " " << pos_mouse.y<<"\n";
+    std::cout << pos_mouse.x << " " << pos_mouse.y << "\n";
     mouse_coord = window->mapPixelToCoords(pos_mouse);
 
     while (window->pollEvent(event)) {
+
+        
 
         if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
         {
             window->close();
             this->windowClose = true;
-            
+            sound->play();
+
 
         }
 
-        
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) ) {
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
             if (pos < 4) {
                 ++pos;
                 texts[pos].setOutlineThickness(4);
                 texts[pos - 1].setOutlineThickness(0);
-               
+
             }
+            sound->play();
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) ) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
             if (pos > 1) {
                 --pos;
-                
+
                 texts[pos].setOutlineThickness(4);
                 texts[pos + 1].setOutlineThickness(0);
-                
-            }
 
-            
+            }
+            sound->play();
+
+
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
         {
+            sound->play();
             switch (pos)
             {
             case 1:
@@ -167,30 +184,36 @@ void Menu::loop_events() {
                 window->close();
                 this->windowClose = true;
                 this->start_game = true;
-                
+
                 break;
             }
-              
+
         }
 
-        
+
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             if (winclose->getGlobalBounds().contains(mouse_coord) || quit->getGlobalBounds().contains(mouse_coord)) {
+                sound->play();
                 //std::cout << "Close the window!" << '\n';
                 window->close();
                 this->windowClose = true;
-                
+               
 
 
             }
             if (play->getGlobalBounds().contains(mouse_coord))
             {
+                sound->play();
                 this->start_game = true;
             }
 
-            if(option->getGlobalBounds().contains(mouse_coord)){}
-            if(about->getGlobalBounds().contains(mouse_coord)){}
+            if (option->getGlobalBounds().contains(mouse_coord)) {
+                sound->play();
+            }
+            if (about->getGlobalBounds().contains(mouse_coord)) {
+                sound->play();
+            }
         }
     }
 }

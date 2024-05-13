@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #include <iostream>
 
@@ -8,7 +9,7 @@ class Menu {
 private:
 
     int pos;
-    bool start_game,windowClose;
+    bool start_game, windowClose;
 
     sf::RenderWindow* window;
     sf::RectangleShape* winclose;
@@ -20,6 +21,8 @@ private:
     sf::Texture* image;
     sf::Sprite* bg;
 
+    sf::SoundBuffer* buffer;
+    sf::Sound* sound;
 
     sf::RectangleShape* optionWinClose;
     sf::Texture* optionImage;
@@ -28,7 +31,7 @@ private:
     sf::Vector2i pos_mouse;
     sf::Vector2f mouse_coord;
 
-    std::vector<const char *> options;
+    std::vector<const char*> options;
     std::vector<sf::Vector2f> coords;
     std::vector<sf::Text> texts;
     std::vector<std::size_t> sizes;
@@ -43,11 +46,11 @@ public:
     ~Menu();
     void run_menu();
     bool getStartGame();
-    sf::RenderWindow*  getWindow();
+    sf::RenderWindow* getWindow();
     bool getWindowClose();
 
     void Option();
     void About();
-    
-    
+
+
 };
