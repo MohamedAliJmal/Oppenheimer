@@ -17,7 +17,7 @@ void Game::initializeVariables()
 	this->mouseHeld = false;
 	this->health = 3;
 	this->end = sf::RectangleShape(sf::Vector2f(1280, 720));
-	this->pause = false;
+	this->pause = true;
 	this->level = 0;
 	this->danger = true;
 
@@ -39,25 +39,41 @@ void Game::initializeText()
 {
 	this->text.setFont(this->font);
 	this->gameOver.setFont(this->font);
+	this->playerText.setFont(this->font);
+	this->enterName.setFont(this->font);
 
 	this->gameOver.setCharacterSize(130);
 	this->text.setCharacterSize(60);
+	this->playerText.setCharacterSize(130);
+	this->enterName.setCharacterSize(130);
 
 	this->text.setOutlineColor(sf::Color::Black);
 	this->text.setOutlineThickness(1.f);
 
+	this->enterName.setOutlineColor(sf::Color::Black);
+	this->enterName.setOutlineThickness(1.f);
+
 	this->gameOver.setOutlineColor(sf::Color::Black);
 	this->gameOver.setOutlineThickness(1.f);
 
+	this->playerText.setOutlineColor(sf::Color::Black);
+	this->playerText.setOutlineThickness(1.f);
+
 	this->text.setFillColor(sf::Color::White);
 	this->gameOver.setFillColor(sf::Color::Red);
+	this->playerText.setFillColor(sf::Color::White);
+	this->enterName.setFillColor(sf::Color::White);
 
 	this->gameOver.setPosition(sf::Vector2f(460, 138));
+	this->enterName.setPosition(sf::Vector2f(460, 138));
+	this->playerText.setPosition(sf::Vector2f(460, 200));
 
 
 
 	this->text.setString("null");
 	this->gameOver.setString("null");
+	this->enterName.setString("Enter your name:");
+	
 }
 
 
@@ -92,17 +108,18 @@ void Game::initializeBg()
 void Game::initializeSound()
 {
 	
-	this->raid_buffer.loadFromFile("assets/music/main.ogg");
+	this->raid_buffer.loadFromFile("assets/music/main2.wav");
 
 	this->raid.setBuffer(raid_buffer);
 	this->raid.setLoop(true);
-	this->raid.play();
+	
 
 
 
-	this->exp_buffer.loadFromFile("assets/music/explosion1.wav");
+	this->exp_buffer.loadFromFile("assets/music/explosion2.wav");
 
 	this->exp.setBuffer(exp_buffer);
+	this->exp.setVolume(80);
 
 	this->go_buffer.loadFromFile("assets/music/gameover.wav");
 	this->go.setBuffer(go_buffer);
@@ -137,7 +154,7 @@ bool Game::running()
 {
 	//std::cout << this->window->isOpen() << '\n';
 
-	return this->window->isOpen() && !this->pause;
+	return this->window->isOpen() ;
 }
 
 int Game::getPoints()
@@ -155,7 +172,7 @@ void Game::updateText()
 	this->text.setString(ss.str());
 
 	std::stringstream sg;
-	sg << "Game Over\n" << "Your Score: " << this->points << "\n Best Score:" << "\nClick To Restart";
+	sg << "Game Over\n" << "Your Score: " << this->points << "\n Best Score:" << "\nClick Right Button To Restart";
 	this->gameOver.setString(sg.str());
 
 }
@@ -319,7 +336,7 @@ void Game::updateEnemy()
 					
 
 					
-					delete enemies.at(i);
+					//dzdelete enemies.at(i);
 					this->enemies.erase(this->enemies.begin() + i);
 					this->points += 10;
 					
@@ -337,6 +354,37 @@ void Game::updateEnemy()
 	}
 }
 
+void Game::getName()
+{
+	this->window->clear();
+
+	this->window->draw(*bg); 
+	this->window->draw(this->end);
+	this->window->draw(this->enterName);
+	while (this->window->pollEvent(this->event))
+	{
+		if (event.type == sf::Event::TextEntered)
+		{
+			playerInput += event.text.unicode;
+			playerText.setString(playerInput);
+		}
+		else if (event.type == sf::Event::KeyPressed)
+		{
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+			{
+				
+				this->pause = false;
+				this->raid.play();
+			}
+		}
+	}
+	window->draw(playerText);
+
+	this->window->display();
+
+	
+}
+
 
 void Game::render()
 {
@@ -345,15 +393,20 @@ void Game::render()
 	std::cout << "mousePosview " << this->mousePosView.x << " " << this->mousePosView.y << '\n';*/
 
 
+	
+		
+	while (this->pause == true)
+	{
+		
+		this->getName();
+	}
 	this->window->clear();
 
 	this->window->draw(*bg);
-
-
-
 	this->renderEnemy();
 	this->renderText(*this->window);
-
+	
+	
 
 
 	if (this->health == 0)
@@ -362,7 +415,7 @@ void Game::render()
 		this->raid.stop();
 		this->window->draw(this->end);
 		this->window->draw(this->gameOver);
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
 		{
 			this->raid.play();
 			this->health = 3;
@@ -402,6 +455,8 @@ void Game::pollEvents()
 
 	while (this->window->pollEvent(this->event))
 	{
+		
+		
 		switch (this->event.type)
 		{
 		case sf::Event::Closed:
@@ -419,8 +474,8 @@ void Game::pollEvents()
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace))
 			{
-				this->pause = true;
-				std::cout << "backspace\n" << '\n';
+				/*this->pause = true;
+				std::cout << "backspace\n" << '\n';*/
 			}
 			break;
 		}

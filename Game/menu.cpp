@@ -121,7 +121,7 @@ void Menu::loop_events() {
 
     sf::Event event;
     pos_mouse = sf::Mouse::getPosition(*window);
-    std::cout << pos_mouse.x << " " << pos_mouse.y << "\n";
+    /*std::cout << pos_mouse.x << " " << pos_mouse.y << "\n";*/
     mouse_coord = window->mapPixelToCoords(pos_mouse);
 
     while (window->pollEvent(event)) {

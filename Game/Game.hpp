@@ -47,7 +47,9 @@ private:
 	sf::Sound go;
 
 
-
+	sf::String playerInput;
+	sf::Text playerText;
+	sf::Text enterName;
 
 	sf::Text gameOver;
 	sf::RectangleShape end;
@@ -99,6 +101,8 @@ public:
 	void renderText(sf::RenderTarget& target);
 	void render();
 	void renderEnemy();
+
+	void getName();
 
 	int getPoints();
 	bool getPause();
