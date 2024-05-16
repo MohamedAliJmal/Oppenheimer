@@ -366,18 +366,37 @@ void Game::initializeName()
 	this->window->draw(this->enterName);
 	while (this->window->pollEvent(this->event))
 	{
-		if (event.type == sf::Event::TextEntered)
+	
+		if (event.type == sf::Event::TextEntered && isalpha(event.text.unicode))
 		{
 			playerInput += event.text.unicode;
 			playerText.setString(playerInput);
 		}
-		else if (event.type == sf::Event::KeyPressed)
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && playerInput.begin()!=playerInput.end())
 		{
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+
+			this->pause = false;
+			this->raid.play();
+
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+		{
+			this->pause = false;
+			this->window->close();
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Delete) || sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace))
+		{
+			
+			sf::String tmp = playerInput;
+			playerInput.clear();
+			if(tmp.begin()!=tmp.end())
 			{
-				
-				this->pause = false;
-				this->raid.play();
+				for (auto i = tmp.begin();i < tmp.end()-1; i++)
+				{
+					playerInput += *i;
+
+				}
+				playerText.setString(playerInput);
 			}
 		}
 	}
