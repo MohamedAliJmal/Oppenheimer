@@ -82,6 +82,7 @@ private:
 	void initializeImage();
 	void initializeBg();
 	void initializeSound();
+	void initializeName();
 
 
 public:

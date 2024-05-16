@@ -139,6 +139,7 @@ Game::Game(sf::RenderWindow* window)
 	this->initializeFont();
 	this->initializeText();
 	this->initializeSound();
+	this->initializeName();
 	
 
 }
@@ -252,7 +253,7 @@ void  Game::spawnEnemy()
 	enemy->getEnemy()->setPosition(
 		static_cast<float>(rand() % static_cast<int>(this->window->getSize().x - enemy->getEnemy()->getTexture()->getSize().x * enemy->getEnemy()->getScale().x)),
 		//static_cast<float>(rand() % static_cast<int>(this->window->getSize().y - enemy->getEnemy()->getTexture()->getSize().y * enemy->getEnemy()->getScale().y - 1000))
-		-300
+		-200
 
 	);
 
@@ -292,7 +293,7 @@ void Game::updateEnemy()
 			enemySpawnTimer = 0.f;
 			this->spawnEnemy();
 		}
-		else enemySpawnTimer += static_cast<float>(sqrt(this->level + 1)) * 15.f;
+		else enemySpawnTimer += static_cast<float>(sqrt(this->level + 1)) * 20.f;
 	}
 
 	/*for (auto& e : this->enemies)
@@ -302,7 +303,7 @@ void Game::updateEnemy()
 
 	for (int i = 0; i < enemies.size(); i++)
 	{
-		enemies.at(i)->getEnemy()->move(0.f, static_cast<float>(sqrt(this->level + 1)));
+		enemies.at(i)->getEnemy()->move(0.f, static_cast<float>(sqrt(this->level + 1))+2);
 
 
 		//if enemy finish the line
@@ -354,8 +355,10 @@ void Game::updateEnemy()
 	}
 }
 
-void Game::getName()
+void Game::initializeName()
 {
+	while(this->pause)
+	{ 
 	this->window->clear();
 
 	this->window->draw(*bg); 
@@ -381,6 +384,7 @@ void Game::getName()
 	window->draw(playerText);
 
 	this->window->display();
+	}
 
 	
 }
@@ -395,11 +399,10 @@ void Game::render()
 
 	
 		
-	while (this->pause == true)
-	{
+	
 		
-		this->getName();
-	}
+
+
 	this->window->clear();
 
 	this->window->draw(*bg);
