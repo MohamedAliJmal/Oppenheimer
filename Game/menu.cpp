@@ -113,7 +113,7 @@ void Menu::set_values() {
     about_text.setLineSpacing(1.5f);
 
 
-    option_string = "\t\t\t\tUnder Construction\nWill be available in V0.3\nContact Tangente For more Details";
+    option_string = "\t\t\tUnder Construction\nWill be available in V0.3\nContact Tangente For more Details";
     option_text.setFillColor(sf::Color::White);
     option_text.setFont(*font);
     option_text.setPosition(sf::Vector2f(584, 205));
