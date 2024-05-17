@@ -43,7 +43,7 @@ Enemy::Enemy()
 
 	this->texture->loadFromFile("assets/images/nuke2.png");
 	this->spirite->setTexture(*this->texture);
-	this->spirite->setScale(sf::Vector2f(0.25, 0.25));
+	this->spirite->setScale(sf::Vector2f(0.3, 0.3));
 
 }
 
