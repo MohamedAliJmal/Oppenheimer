@@ -34,7 +34,7 @@ int main()
 
        
         Game game(menu.getWindow());
-       
+        menu.~Menu();
         // Start the game loop
         while (game.running())
         {
