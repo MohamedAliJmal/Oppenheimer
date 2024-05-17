@@ -116,7 +116,6 @@ void Game::initializeSound()
 {
 	
 	this->raid_buffer.loadFromFile("assets/music/main2.wav");
-
 	this->raid.setBuffer(raid_buffer);
 	this->raid.setLoop(true);
 	
@@ -124,7 +123,6 @@ void Game::initializeSound()
 
 
 	this->exp_buffer.loadFromFile("assets/music/explosion2.wav");
-
 	this->exp.setBuffer(exp_buffer);
 	this->exp.setVolume(80);
 
@@ -183,6 +181,7 @@ void Game::initializeName()
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && playerInput.begin() != playerInput.end())
 			{
+				//start the game
 
 				this->pause = false;
 				this->raid.play();
@@ -190,11 +189,13 @@ void Game::initializeName()
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 			{
+				//close the game
 				this->pause = false;
 				this->window->close();
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Delete) || sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace))
 			{
+				//delete text
 
 				tmp = playerInput;
 
@@ -234,13 +235,14 @@ void Game::updateText()
 {
 
 
-
+	//text of scoreborad
 	std::stringstream ss;
 	ss << " Level: " << this->level << "\n Points: " << this->points << "\n Health: " << this->health;
 	this->text.setString(ss.str());
 
+	//text of game over
 	std::stringstream sg;
-	sg << "Game Over " << this->playerInput.toAnsiString()<<"\n" << "Your Score : " << this->points << "\n Best Score : 5569 " << "\nClick Right Button To Restart";
+	sg << "Game Over " << this->playerInput.toAnsiString()<<"\n" << "Your Score : " << this->points << "\n Best Score : 5570 " << "\nClick Right Button To Restart";
 	this->gameOver.setString(sg.str());
 
 }
@@ -436,6 +438,7 @@ void Game::render()
 	
 	this->renderEnemy();
 	this->renderText(*this->window);
+	//check if rocket finish the line to draw explosion
 	if (this->explosion_sprite->getPosition().y == this->window->getSize().y-250.f)
 	{
 		this->window->draw(*explosion_sprite);
@@ -444,7 +447,7 @@ void Game::render()
 	
 	
 
-
+	//check if health = 0 to stop the game
 	if (this->health == 0)
 	{
 		
@@ -507,12 +510,12 @@ void Game::pollEvents()
 				this->window->close();
 
 			}
-
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace))
-			{
-				/*this->pause = true;
-				std::cout << "backspace\n" << '\n';*/
-			}
+			// to do backspace make you return to the menu
+			//if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace))
+			//{
+			//	/*this->pause = true;
+			//	std::cout << "backspace\n" << '\n';*/
+			//}
 			break;
 		}
 

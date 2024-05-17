@@ -4,11 +4,12 @@
 
 /*
 * todo
-* - start up menu :: 1/2 done -> option and about
-* - save records by name
-* - levels::done
-* -end game :: done
-* save scores and display high score (use heap structure)
+*  start up menu :: 1/2 done ->  about / to do option
+* levels::done
+* end game :: done
+* save scores and display high score (use heap structure):: to do
+*  save records by name:: to do
+* store scoreboard on the internet:: to do
 *
 */
 
