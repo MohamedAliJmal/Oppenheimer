@@ -16,7 +16,7 @@ void Game::initializeVariables()
 	this->maxEnemies = 4;
 	this->mouseHeld = false;
 	this->health = 3;
-	this->end = sf::RectangleShape(sf::Vector2f(1280, 720));
+	this->end = sf::RectangleShape(sf::Vector2f(1920, 1080));
 	this->pause = true;
 	this->level = 0;
 	this->danger = true;
@@ -42,10 +42,10 @@ void Game::initializeText()
 	this->playerText.setFont(this->font);
 	this->enterName.setFont(this->font);
 
-	this->gameOver.setCharacterSize(130);
-	this->text.setCharacterSize(60);
-	this->playerText.setCharacterSize(130);
-	this->enterName.setCharacterSize(130);
+	this->gameOver.setCharacterSize(170);
+	this->text.setCharacterSize(100);
+	this->playerText.setCharacterSize(150);
+	this->enterName.setCharacterSize(150);
 
 	this->text.setOutlineColor(sf::Color::Black);
 	this->text.setOutlineThickness(1.f);
@@ -64,7 +64,7 @@ void Game::initializeText()
 	this->playerText.setFillColor(sf::Color::White);
 	this->enterName.setFillColor(sf::Color::White);
 
-	this->gameOver.setPosition(sf::Vector2f(400, 138));
+	this->gameOver.setPosition(sf::Vector2f(550, 138));
 	this->enterName.setPosition(sf::Vector2f(460, 138));
 	this->playerText.setPosition(sf::Vector2f(460, 200));
 
@@ -88,7 +88,7 @@ void Game::initializeWindow(sf::RenderWindow* window)
 void Game::initializeImage()
 {
 	this->image = new sf::Texture();
-	if (!this->image->loadFromFile("assets/images/sky2.jpg"))
+	if (!this->image->loadFromFile("assets/images/sky3.jpg"))
 	{
 		std::cout << "image failed\n";
 	}
@@ -97,7 +97,8 @@ void Game::initializeImage()
 	this->explosion_sprite = new sf::Sprite;
 	this->explosion->loadFromFile("assets/images/explosion.png");
 	this->explosion_sprite->setTexture(*explosion);
-	this->explosion_sprite->setScale(0.5, 0.5);
+	this->explosion_sprite->setScale(1, 1);
+	
 
 
 }
@@ -370,7 +371,7 @@ void Game::updateEnemy()
 		if (enemies.at(i)->getEnemy()->getPosition().y > this->window->getSize().y)
 		{
 			
-			this->explosion_sprite->setPosition(enemies.at(i)->getEnemy()->getPosition().x-70.f, this->window->getSize().y-250.f);
+			this->explosion_sprite->setPosition(enemies.at(i)->getEnemy()->getPosition().x-250.f, this->window->getSize().y-600.f);
 			
 			
 			//delete this->enemies.at(i);
@@ -439,7 +440,7 @@ void Game::render()
 	this->renderEnemy();
 	this->renderText(*this->window);
 	//check if rocket finish the line to draw explosion
-	if (this->explosion_sprite->getPosition().y == this->window->getSize().y-250.f)
+	if (this->explosion_sprite->getPosition().y == this->window->getSize().y-600.f)
 	{
 		this->window->draw(*explosion_sprite);
 		this->explosion_sprite->setPosition(0, 0);

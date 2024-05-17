@@ -48,8 +48,8 @@ void Menu::set_values() {
 
 
 
-    window->create(sf::VideoMode(1280, 720), "Oppenheimer", sf::Style::Titlebar | sf::Style::Fullscreen );
-    /*window->create(sf::VideoMode(1920, 1080), "Oppenheimer", sf::Style::Titlebar | sf::Style::Fullscreen);*/
+    /*window->create(sf::VideoMode(1280, 720), "Oppenheimer", sf::Style::Titlebar | sf::Style::Fullscreen );*/
+    window->create(sf::VideoMode(1920, 1080), "Oppenheimer", sf::Style::Titlebar | sf::Style::Fullscreen);
     window->setFramerateLimit(30);
     //window->setPosition(sf::Vector2i(0, 0));
 
@@ -57,7 +57,7 @@ void Menu::set_values() {
     this->start_game = this->windowClose = false;
 
     font->loadFromFile("assets/font/arial.ttf");
-    image->loadFromFile("assets/images/menu-sci-fi-game.png");
+    image->loadFromFile("assets/images/menu-game.png");
 
     bg->setTexture(*image);
 
@@ -66,8 +66,8 @@ void Menu::set_values() {
 
     options = { "Oppenheimer", "Play", "Options", "about", "Quit" };
     texts.resize(5);
-    coords = { {590,40},{610,191},{590,282},{600,370},{623,457} };
-    sizes = { 20,28,24,24,24 };
+    coords = { {874,43},{877,287},{877,424},{887,556},{887,681} };
+    sizes = { 45,42,40,40,40 };
 
     for (std::size_t i{}; i < texts.size(); ++i) {
         texts[i].setFont(*font);
@@ -79,31 +79,36 @@ void Menu::set_values() {
     texts[1].setOutlineThickness(4);
     pos = 1;
 
-    winclose->setSize(sf::Vector2f(40, 40));
-    winclose->setPosition(1170, 35);
-    winclose->setFillColor(sf::Color::Transparent);
+    winclose->setSize(sf::Vector2f(55, 55));
+    winclose->setPosition(1755, 60);
+    winclose->setFillColor(sf::Color::Black);
 
-    play->setSize(sf::Vector2f(170, 60));
-    play->setPosition(578, 182);
+    play->setSize(sf::Vector2f(300, 100));
+    play->setPosition(866, 275);
+   
+   
 
-    option->setSize(sf::Vector2f(170, 60));
-    option->setPosition(590, 271);
+    option->setSize(sf::Vector2f(300, 100));
+    option->setPosition(866, 410);
+    
 
-    about->setSize(sf::Vector2f(170, 60));
-    about->setPosition(580, 361);
+    about->setSize(sf::Vector2f(300, 100));
+    about->setPosition(866, 530);
+    
 
-    quit->setSize(sf::Vector2f(170, 60));
-    quit->setPosition(580, 440);
+    quit->setSize(sf::Vector2f(300, 100));
+    quit->setPosition(866,660);
+    
 
     buffer->loadFromFile("assets/music/bloop.ogg");
 
     sound->setBuffer(*buffer);
 
-    about_string = "Hello Friends this game was designed and developed By \ntwo awesome men Gilfoyle and Dinesh .\nthis is V0.2 can't wait for V0.3\nall right reserved ©Tangente 2024\n\nAcknowledgement:\nTo that indian guy on youtube \nand to Bjarne Stroustrup  ";
+    about_string = "Hello Friends this game was designed and\ndeveloped By two awesome men \nGilfoyle and Dinesh .\nthis is V0.2 can't wait for V0.3\nall right reserved ©Tangente 2024\nAcknowledgement:\nTo that indian guy on youtube \nand to Bjarne Stroustrup  ";
     about_text.setFillColor(sf::Color::White);
     about_text.setFont(*font);
-    about_text.setPosition(sf::Vector2f(392.f, 144.f));
-    about_text.setCharacterSize(20);
+    about_text.setPosition(sf::Vector2f(584, 205));
+    about_text.setCharacterSize(45);
     about_text.setString(about_string);
     about_text.setLineSpacing(1.5f);
 
@@ -111,8 +116,8 @@ void Menu::set_values() {
     option_string = "\t\t\t\tUnder Construction\nWill be available in V0.3\nContact Tangente For more Details";
     option_text.setFillColor(sf::Color::White);
     option_text.setFont(*font);
-    option_text.setPosition(sf::Vector2f(392.f, 144.f));
-    option_text.setCharacterSize(30);
+    option_text.setPosition(sf::Vector2f(584, 205));
+    option_text.setCharacterSize(55);
     option_text.setString(option_string);
     option_text.setLineSpacing(1.5f);
 
@@ -147,7 +152,7 @@ void Menu::loop_events() {
 
     sf::Event event;
     pos_mouse = sf::Mouse::getPosition(*window);
-    /*std::cout << pos_mouse.x << " " << pos_mouse.y << "\n";*/
+    std::cout << pos_mouse.x << " " << pos_mouse.y << "\n";
     mouse_coord = window->mapPixelToCoords(pos_mouse);
 
     while (window->pollEvent(event)) {
@@ -255,7 +260,7 @@ void Menu::draw_all() {
         window->draw(t);
     }
     //window->draw(*quit);
-    window->draw(*winclose);
+    
     window->display();
 }
 
