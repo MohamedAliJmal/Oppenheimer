@@ -1,6 +1,5 @@
 #include "Game.hpp"
 
-
 void Game::initializeVariables()
 {
 	std::cout << "initailize variables\n";
@@ -20,9 +19,6 @@ void Game::initializeVariables()
 	this->pause = true;
 	this->level = 0;
 	this->danger = true;
-
-
-
 
 
 }
@@ -68,14 +64,11 @@ void Game::initializeText()
 	this->enterName.setPosition(sf::Vector2f(460, 138));
 	this->playerText.setPosition(sf::Vector2f(460, 200));
 
-
-
 	this->text.setString("null");
 	this->gameOver.setString("null");
 	this->enterName.setString("Enter your name:");
 	
 }
-
 
 void Game::initializeWindow(sf::RenderWindow* window)
 {
@@ -84,7 +77,6 @@ void Game::initializeWindow(sf::RenderWindow* window)
 	window->setFramerateLimit(45);
 
 }
-
 void Game::initializeImage()
 {
 	this->image = new sf::Texture();
@@ -99,7 +91,6 @@ void Game::initializeImage()
 	this->explosion_sprite->setTexture(*explosion);
 	this->explosion_sprite->setScale(1, 1);
 	
-
 
 }
 
@@ -131,7 +122,6 @@ void Game::initializeSound()
 	this->go.setBuffer(go_buffer);
 
 }
-
 
 
 
