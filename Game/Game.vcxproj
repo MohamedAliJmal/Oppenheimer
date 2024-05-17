@@ -81,10 +81,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>${SolutionDir}\libraries\include\;$(IncludePath)</IncludePath>
     <LibraryPath>${SolutionDir}\libraries\lib\;$(LibraryPath)</LibraryPath>
+    <TargetName>Oppenheimer</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>${SolutionDir}\libraries\include\;$(IncludePath)</IncludePath>
     <LibraryPath>${SolutionDir}\libraries\lib\;$(LibraryPath)</LibraryPath>
+    <TargetName>oppenheimer</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -164,9 +166,13 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />
+    <ClInclude Include="resource2.h" />
+    <ClInclude Include="resource3.h" />
+    <ClInclude Include="resource4.h" />
+    <ClInclude Include="resource5.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Game1.rc" />
+    <ResourceCompile Include="Game5.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\icon.ico" />

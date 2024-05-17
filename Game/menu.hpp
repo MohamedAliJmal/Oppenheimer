@@ -34,6 +34,8 @@ private:
     sf::String option_string;
     sf::Text option_text;
 
+    sf::Image icon;
+
     sf::Vector2i pos_mouse;
     sf::Vector2f mouse_coord;
 

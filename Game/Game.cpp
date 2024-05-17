@@ -15,7 +15,7 @@ void Game::initializeVariables()
 	this->enemySpawnTimerMax = 1000.f;
 	this->maxEnemies = 4;
 	this->mouseHeld = false;
-	this->health = 10;
+	this->health = 3;
 	this->end = sf::RectangleShape(sf::Vector2f(1280, 720));
 	this->pause = true;
 	this->level = 0;
@@ -64,7 +64,7 @@ void Game::initializeText()
 	this->playerText.setFillColor(sf::Color::White);
 	this->enterName.setFillColor(sf::Color::White);
 
-	this->gameOver.setPosition(sf::Vector2f(460, 138));
+	this->gameOver.setPosition(sf::Vector2f(400, 138));
 	this->enterName.setPosition(sf::Vector2f(460, 138));
 	this->playerText.setPosition(sf::Vector2f(460, 200));
 
@@ -240,7 +240,7 @@ void Game::updateText()
 	this->text.setString(ss.str());
 
 	std::stringstream sg;
-	sg << "Game Over\n" << "Your Score: " << this->points << "\n Best Score:" << "\nClick Right Button To Restart";
+	sg << "Game Over " << this->playerInput.toAnsiString()<<"\n" << "Your Score : " << this->points << "\n Best Score : 5569 " << "\nClick Right Button To Restart";
 	this->gameOver.setString(sg.str());
 
 }
