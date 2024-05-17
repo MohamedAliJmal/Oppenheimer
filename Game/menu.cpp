@@ -47,6 +47,8 @@ void Menu::set_values() {
 
 
     window->create(sf::VideoMode(1280, 720), "Oppenheimer", sf::Style::Titlebar | sf::Style::Fullscreen);
+    /*window->create(sf::VideoMode(1920, 1080), "Oppenheimer", sf::Style::Titlebar | sf::Style::Fullscreen);*/
+    window->setFramerateLimit(30);
     //window->setPosition(sf::Vector2i(0, 0));
 
     this->pos = 0;
@@ -60,7 +62,7 @@ void Menu::set_values() {
     pos_mouse = { 0,0 };
     mouse_coord = { 0, 0 };
 
-    options = { "Oppenheimer", "Play", "Options", "About", "Quit" };
+    options = { "Oppenheimer", "Play", "Options", "about", "Quit" };
     texts.resize(5);
     coords = { {590,40},{610,191},{590,282},{600,370},{623,457} };
     sizes = { 20,28,24,24,24 };
@@ -95,6 +97,23 @@ void Menu::set_values() {
 
     sound->setBuffer(*buffer);
 
+    about_string = "Hello Friends this game was designed and developed By \ntwo awesome men.\nthis is V0.2 can't wait for V0.3\n©AwesomeDev 2024\n\nAcknowledgement:\nTo that indian guy on youtube god Bless him. ";
+    about_text.setFillColor(sf::Color::White);
+    about_text.setFont(*font);
+    about_text.setPosition(sf::Vector2f(392.f, 144.f));
+    about_text.setCharacterSize(20);
+    about_text.setString(about_string);
+    about_text.setLineSpacing(1.5f);
+
+
+    option_string = "\t\t\t\tUnder Construction\nWill be available in V0.3\nContact AwesomeDev For more Details";
+    option_text.setFillColor(sf::Color::White);
+    option_text.setFont(*font);
+    option_text.setPosition(sf::Vector2f(392.f, 144.f));
+    option_text.setCharacterSize(30);
+    option_text.setString(option_string);
+    option_text.setLineSpacing(1.5f);
+
 
 
 
@@ -121,14 +140,14 @@ void Menu::loop_events() {
 
     sf::Event event;
     pos_mouse = sf::Mouse::getPosition(*window);
-    /*std::cout << pos_mouse.x << " " << pos_mouse.y << "\n";*/
+    std::cout << pos_mouse.x << " " << pos_mouse.y << "\n";
     mouse_coord = window->mapPixelToCoords(pos_mouse);
 
     while (window->pollEvent(event)) {
 
         
 
-        if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
         {
             window->close();
             this->windowClose = true;
@@ -172,12 +191,12 @@ void Menu::loop_events() {
 
             case 2:
 
-                //this->option();
+                this->Option();
                 break;
 
             case 3:
 
-                //this->about();
+                this->About();
                 break;
 
             case 4:
@@ -210,9 +229,11 @@ void Menu::loop_events() {
 
             if (option->getGlobalBounds().contains(mouse_coord)) {
                 sound->play();
+                this->Option();
             }
             if (about->getGlobalBounds().contains(mouse_coord)) {
                 sound->play();
+                this->About();
             }
         }
     }
@@ -228,6 +249,83 @@ void Menu::draw_all() {
     }
     //window->draw(*quit);
     window->display();
+}
+
+void Menu::About()
+{
+    
+    sf::Event event;
+    sf::Texture about_image;
+    sf::Sprite about_bg;
+    about_image.loadFromFile("assets/images/menu_without_boxer.png");
+    about_bg.setTexture(about_image);
+    while (this->window->isOpen() ) {
+        
+        pos_mouse = sf::Mouse::getPosition(*window);
+        mouse_coord = window->mapPixelToCoords(pos_mouse);
+        while (window->pollEvent(event)) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+            {
+                sound->play();
+                return;
+               
+            }
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+                if (winclose->getGlobalBounds().contains(mouse_coord) ) {
+                    sound->play();
+                    mouse_coord.x = 0.f;
+                    mouse_coord.y = 0.f;
+                    return;
+                }
+            }
+
+        }
+        window->clear();
+        window->draw(about_bg);
+        window->draw(texts[0]);
+        window->draw(about_text);
+        window->display();
+
+    }
+
+}
+void Menu::Option()
+{
+
+    sf::Event event;
+    sf::Texture about_image;
+    sf::Sprite about_bg;
+    about_image.loadFromFile("assets/images/menu_without_boxer.png");
+    about_bg.setTexture(about_image);
+    while (this->window->isOpen()) {
+
+        pos_mouse = sf::Mouse::getPosition(*window);
+        mouse_coord = window->mapPixelToCoords(pos_mouse);
+        while (window->pollEvent(event)) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+            {
+                sound->play();
+                return;
+
+            }
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+                if (winclose->getGlobalBounds().contains(mouse_coord)) {
+                    sound->play();
+                    mouse_coord.x = 0.f;
+                    mouse_coord.y = 0.f;
+                    return;
+                }
+            }
+
+        }
+        window->clear();
+        window->draw(about_bg);
+        window->draw(texts[0]);
+        window->draw(option_text);
+        window->display();
+
+    }
+
 }
 
 void Menu::run_menu() {

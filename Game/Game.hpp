@@ -29,6 +29,9 @@ private:
 	sf::Texture* image;
 	sf::Sprite* bg;
 
+	sf::Texture* explosion;
+	sf::Sprite* explosion_sprite;
+
 	//mouse postion
 	sf::Vector2i mousePosWindow;
 	sf::Vector2f mousePosView;

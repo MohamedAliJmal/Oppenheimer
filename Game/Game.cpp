@@ -15,7 +15,7 @@ void Game::initializeVariables()
 	this->enemySpawnTimerMax = 1000.f;
 	this->maxEnemies = 4;
 	this->mouseHeld = false;
-	this->health = 3;
+	this->health = 10;
 	this->end = sf::RectangleShape(sf::Vector2f(1280, 720));
 	this->pause = true;
 	this->level = 0;
@@ -81,7 +81,7 @@ void Game::initializeWindow(sf::RenderWindow* window)
 {
 
 	this->window = window;
-	window->setFramerateLimit(60);
+	window->setFramerateLimit(45);
 
 }
 
@@ -92,6 +92,13 @@ void Game::initializeImage()
 	{
 		std::cout << "image failed\n";
 	}
+
+	this->explosion = new sf::Texture;
+	this->explosion_sprite = new sf::Sprite;
+	this->explosion->loadFromFile("assets/images/explosion.png");
+	this->explosion_sprite->setTexture(*explosion);
+	this->explosion_sprite->setScale(0.5, 0.5);
+
 
 }
 
@@ -147,7 +154,67 @@ Game::Game(sf::RenderWindow* window)
 Game::~Game()
 {
 	delete window;
+	delete image;
+	delete bg;
+	delete explosion;
+	delete explosion_sprite;
 	
+}
+
+
+void Game::initializeName()
+{
+	while (this->pause)
+	{
+		sf::String tmp;
+		this->window->clear();
+
+		this->window->draw(*bg);
+		this->window->draw(this->end);
+		this->window->draw(this->enterName);
+		while (this->window->pollEvent(this->event))
+		{
+
+
+			if (event.type == sf::Event::TextEntered && isalpha(event.text.unicode))
+			{
+				playerInput += event.text.unicode;
+				playerText.setString(playerInput);
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && playerInput.begin() != playerInput.end())
+			{
+
+				this->pause = false;
+				this->raid.play();
+
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+			{
+				this->pause = false;
+				this->window->close();
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Delete) || sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace))
+			{
+
+				tmp = playerInput;
+
+				playerInput.clear();
+				if (tmp.begin() != tmp.end())
+				{
+
+					for (auto i = tmp.begin(); i < tmp.end() - 1; i++)
+					{
+						playerInput += *i;
+
+					}
+					playerText.setString(playerInput);
+				}
+			}
+		}
+		window->draw(playerText);
+
+		this->window->display();
+	}
 }
 
 bool Game::running()
@@ -201,9 +268,7 @@ void Game::update()
 
 {
 	
-	
-	
-	
+
 	this->pollEvents();
 
 	this->updateMousePos();
@@ -217,13 +282,6 @@ void Game::update()
 
 
 	}
-
-
-
-
-
-
-
 
 }
 
@@ -309,11 +367,17 @@ void Game::updateEnemy()
 		//if enemy finish the line
 		if (enemies.at(i)->getEnemy()->getPosition().y > this->window->getSize().y)
 		{
+			
+			this->explosion_sprite->setPosition(enemies.at(i)->getEnemy()->getPosition().x-70.f, this->window->getSize().y-250.f);
+			
+			
 			//delete this->enemies.at(i);
 			this->enemies.erase(this->enemies.begin() + i);
 
 			health--;
 			this->go.play();
+
+			
 		}
 
 
@@ -337,7 +401,7 @@ void Game::updateEnemy()
 					
 
 					
-					//dzdelete enemies.at(i);
+					//delete enemies.at(i);
 					this->enemies.erase(this->enemies.begin() + i);
 					this->points += 10;
 					
@@ -355,58 +419,9 @@ void Game::updateEnemy()
 	}
 }
 
-void Game::initializeName()
-{
-	while(this->pause)
-	{ 
-	this->window->clear();
 
-	this->window->draw(*bg); 
-	this->window->draw(this->end);
-	this->window->draw(this->enterName);
-	while (this->window->pollEvent(this->event))
-	{
-	
-		if (event.type == sf::Event::TextEntered && isalpha(event.text.unicode))
-		{
-			playerInput += event.text.unicode;
-			playerText.setString(playerInput);
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && playerInput.begin()!=playerInput.end())
-		{
-
-			this->pause = false;
-			this->raid.play();
-
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-		{
-			this->pause = false;
-			this->window->close();
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Delete) || sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace))
-		{
-			
-			sf::String tmp = playerInput;
-			playerInput.clear();
-			if(tmp.begin()!=tmp.end())
-			{
-				for (auto i = tmp.begin();i < tmp.end()-1; i++)
-				{
-					playerInput += *i;
-
-				}
-				playerText.setString(playerInput);
-			}
-		}
-	}
-	window->draw(playerText);
-
-	this->window->display();
-	}
 
 	
-}
 
 
 void Game::render()
@@ -415,18 +430,17 @@ void Game::render()
 	/*std::cout << "mousePosWindow " << this->mousePosWindow.x << " " << this->mousePosWindow.y << '\n';
 	std::cout << "mousePosview " << this->mousePosView.x << " " << this->mousePosView.y << '\n';*/
 
-
-	
-		
-	
-		
-
-
 	this->window->clear();
 
 	this->window->draw(*bg);
+	
 	this->renderEnemy();
 	this->renderText(*this->window);
+	if (this->explosion_sprite->getPosition().y == this->window->getSize().y-250.f)
+	{
+		this->window->draw(*explosion_sprite);
+		this->explosion_sprite->setPosition(0, 0);
+	}
 	
 	
 
@@ -459,7 +473,7 @@ void Game::render()
 			//	
 
 			//}
-
+			this->window->display();
 
 		}
 

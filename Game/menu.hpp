@@ -28,6 +28,12 @@ private:
     sf::Texture* optionImage;
     sf::Sprite* optionBg;
 
+    sf::String about_string;
+    sf::Text about_text;
+
+    sf::String option_string;
+    sf::Text option_text;
+
     sf::Vector2i pos_mouse;
     sf::Vector2f mouse_coord;
 
