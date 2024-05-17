@@ -354,7 +354,7 @@ void Game::updateEnemy()
 			enemySpawnTimer = 0.f;
 			this->spawnEnemy();
 		}
-		else enemySpawnTimer += static_cast<float>(sqrt(this->level + 1)) * 20.f;
+		else enemySpawnTimer += static_cast<float>(sqrt(this->level + 1)) * 30.f;
 	}
 
 	/*for (auto& e : this->enemies)
@@ -364,7 +364,7 @@ void Game::updateEnemy()
 
 	for (int i = 0; i < enemies.size(); i++)
 	{
-		enemies.at(i)->getEnemy()->move(0.f, static_cast<float>(sqrt(this->level + 1))+2);
+		enemies.at(i)->getEnemy()->move(0.f, static_cast<float>(sqrt(this->level + 1))+5);
 
 
 		//if enemy finish the line
